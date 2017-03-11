@@ -32,11 +32,7 @@ FusionEKF::FusionEKF() {
   Hr = MatrixXd(3, 4);
 
   // State covariance
-  P = MatrixXd(4, 4);
-  P << 100.0, 0.0,   0.0,     0.0,
-       0,     100.0, 0.0,     0.0,
-       0,     0,     10000.0, 0.0,
-       0,     0,     0.0,     10000.0;
+  P = MatrixXd::Zero(4, 4);  
 
   // Process covariance (updated later)
   Q = MatrixXd::Zero(4, 4);  
