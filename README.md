@@ -1,11 +1,22 @@
 # Extended Kalman Filter Project
 
 This is a turn-in project for Udacity's Self-Driving car program.  It 
-is based on the [Starter Repo](https://github.com/udacity/CarND-Extended-Kalman-Filter-Project), though
-has a number of changes in implementation.  That is to say, there are a number
-of changes to what concept has what responsibility, probably most notably 
-having only one update routine in `kalman_filter.cpp` so that it has a unified
-functionality independent of measurement data type. 
+is based on [Udacity's Starter Repo](https://github.com/udacity/CarND-Extended-Kalman-Filter-Project).
+Visualization of the output is courtesy of the Jupyter visualization notebook 
+[Sensor Fusion Toolkit](https://github.com/udacity/CarND-Mercedes-SF-Utilities) from the 
+Mercedes team that accompanies the project.
+
+
+
+## Code
+
+The code is similar to the stock repo code, though I didn't like public variable
+use and didn't think that it was as good an interface to the Kalman filter using 
+two separate evaluation methods.  These were changed so that the concerns of the 
+differnt data types are contained in `FusionEKF.cpp` only, allowing `kalman.cpp` 
+to focus on the measurement and updat algorithm only.  A number of changes were 
+made to the constructors and initialization along these lines.  All of this 
+rather simplified the project.
 
 
 
@@ -29,14 +40,23 @@ The coefficients that are selected in `FusionEKF.cpp` were specifically selected
 decent results with `sample-laser-radar-measurement-data-1.txt`.  The way they were selected 
 was by iteratively adjusting coefficients to reduce the RMSE.  These coefficients most 
 definitely do not perform the same for the other data set.  Indeed, they are quite a bit different
-in order to produce decent results with it.  It is a bit troubling that there is not a 
-one-size-fits-all collection of coefficients that works for both, as one would thing that barring
-a significant difference in process generating the two sets of points, the filter ought to
-track fairly uniformly.
+in order to produce decent results with it, and are not really what I would have expected to 
+minimize the RMSE.  That said, one's mileage may vary quite a bit applying this code directly to 
+other data sets.  It is more than a bit troubling that there is not a one-size-fits-all collection 
+of coefficients that works for both, as one would thing that barring a significant difference 
+in process generating the two sets of points, the filter ought to track fairly uniformly.
+
+Plotting the lissajous figure using the visualization toolkit generates the following image:
+
+![Visualization](visualization.jpg)
+
+As you can see in the visualization, you can barely see the estimate since the ground truth nearly 
+always covers it.  This will be discussed later, but do note that it is generally in areas 
+with the most deviation from constant velocity that the errors are admitted.
 
 
 
-## Further Experiments
+## Further Experiments and Commentary
 
 Using some manual quasi gradient decent to find the parameters that work well is pretty dumb, 
 though instructive in understanding the practical effect of the parameters on the model.  What we
@@ -78,5 +98,7 @@ it will have convergence issues.  In our lissajous pattern data, we would not ex
 performance because the distribution of data is changing rather rapidly.  This is not unexpected 
 since the model is posited around the idea of constant velocity.  Since we are moving effectively in
 an orbit, this is not the ideal model.  It would be better for something with at best a very slowly
-changing velocity with a very stable distribution of sampled data.  In any case, with some new 
-assumptions, that is of course what the unscented Kalman filter is for.
+changing velocity with a very stable distribution of sampled data.  Things like tracking slow-moving
+temperatures, aeronautical bodies moving at stable velocity and such are probably better cases for the 
+extended Kalman filter than the lissajous figure in this exercise.  In any case, with some new 
+assumptions, that is of course what the unscented Kalman filter is for.  
