@@ -6,8 +6,13 @@ filename = 'data/sample-laser-radar-measurement-data-1.txt'
 
 pxs = []
 pys = []
+
 vxs = []
 vys = []
+
+rhos = []
+phis = []
+rhodots = []
 
 with open(filename, 'rt') as csvfile:
     reader = csv.reader(csvfile, delimiter='\t')
@@ -27,10 +32,19 @@ with open(filename, 'rt') as csvfile:
             vx_gt = float(row[7])
             vy_gt = float(row[8])
 
+            rho_gt = px_gt * px_gt + py_gt * py_gt
+            phi_gt = math.atan(py_gt / px_gt)
+            rho_dot_gt = (px_gt * vx_gt + py_gt * vy_gt) / rho_gt
+
             pxs.append(px - px_gt)
             pys.append(py - py_gt)
+
             vxs.append(vx - vx_gt)
             vys.append(vy - vy_gt)
+
+            rhos.append(rho - rho_gt)
+            phis.append(phi - phi_gt)
+            rhodots.append(rho_dot - rho_dot_gt)
 
         if row[0] == 'L':
             px = float(row[1])
@@ -50,4 +64,7 @@ print('px: ', variance(pxs))
 print('py: ', variance(pys))    
 print('vx: ', variance(vxs))
 print('vy: ', variance(vys))
+print('rho: ', variance(rhos))
+print('phi: ', variance(phis))
+print('rho_dot: ', variance(rhodots))
 

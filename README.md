@@ -80,7 +80,27 @@ are relatively accurate for position) and how large the variance is for the velo
 as we have less data and of lower resolution).  This somewhat supports some of the general ideas about
 the `Rl` and `Rr` matrices, but not in a directly corresponding manner.  Of course there are other
 issues at play in the Kalman filter, such as the actual contribution of the error term through 
-the Kalman gain, which would alter the effect of the running contribution of these values.
+the Kalman gain, which would alter the effect of the running contribution of these values.  In any event,
+here are the results of running `stats.py` on `sample-laser-radar-measurement-data-1.txt out.txt`:
+
+```
+px:  0.0030318456883
+py:  0.00232796032072
+vx:  1.75231650122
+vy:  2.81928216089
+rho:  3063.11545594
+phi:  1.0680397691e-06
+rho_dot:  3.08142854873
+
+```
+
+As you can see (and as expected), `rho` and `rho_dot` are not very good.  This propogates to the 
+velocities `vx` and `vy` as well.  What I have found is that setting `Rl` and `Rr` based on these 
+observations of process covariance works reasonably well, though it still requires some tuning to get 
+the RMSE lower.  The `Q` matrix covariances appear to be governed by the process `rho` variance, as I
+was unable to get the RMSE to be a minimum without driving up those values to the same order of magnitude
+seen here with the variance of `rho`.  It certainly is helpful to have a priori knowledge of the 
+error process to have a good starting point for the tuning!
 
 In a relative sense, the performance of the filter is pretty good.  The RMSE is pretty low 
 for positions, and the relative size of the RMSE for velocity is significantly lower than
