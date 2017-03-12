@@ -14,7 +14,7 @@ The code is similar to the stock repo code, though I didn't like public variable
 use and didn't think that it was as good an interface to the Kalman filter using 
 two separate evaluation methods.  These were changed so that the concerns of the 
 differnt data types are contained in `FusionEKF.cpp` only, allowing `kalman.cpp` 
-to focus on the measurement and updat algorithm only.  A number of changes were 
+to focus on the measurement and update algorithm only.  A number of changes were 
 made to the constructors and initialization along these lines.  All of this 
 rather simplified the project.
 
