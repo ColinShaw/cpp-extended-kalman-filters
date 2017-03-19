@@ -15,24 +15,25 @@ FusionEKF::FusionEKF() {
 
   // Measurement covariance
   Rl = MatrixXd(2, 2); 
-  Rl << 0.2, 0.0,
-        0.0, 0.2;
+  Rl << 0.01, 0.0,
+        0.0,  0.01;
 
   Rr = MatrixXd(3, 3);	
-  Rr << 3.0, 0.0, 0.0,
-        0.0, 7.0, 0.0,
-        0.0, 0.0, 1.0;
+  Rr << 0.01, 0.0,    0.0,
+        0.0,  1.0e-6, 0.0,
+        0.0,  0.0,    0.01;
 
   // Lidar measurement function
   Hl = MatrixXd(2, 4);	
   Hl << 1.0, 0.0, 0.0, 0.0,
         0.0, 1.0, 0.0, 0.0;
 
-  // Radar measurement function Jacobian placeholder
-  Hr = MatrixXd(3, 4);
-
   // State covariance
-  P = MatrixXd::Zero(4, 4);  
+  P = MatrixXd(4, 4);
+  P << 1, 0, 0, 0,
+       0, 1, 0, 0,
+       0, 0, 1000, 0,
+       0, 0, 0, 1000;
 
   // Process covariance (updated later)
   Q = MatrixXd::Zero(4, 4);  
@@ -76,15 +77,17 @@ void FusionEKF::Update(const MeasurementPackage &measurement_pack) {
   previous_timestamp_ = measurement_pack.timestamp_;
 
   EKF.SetDeltaT(dt);
-  EKF.UpdateQ(5000.0, 5000.0, dt); 
+  EKF.UpdateQ(5.0, 5.0, dt); 
   EKF.Predict();
 
   if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
-    Hr = tools.CalculateJacobian(EKF.GetX());
-    EKF.Update(measurement_pack.raw_measurements_, Hr, Rr);
+    VectorXd x = EKF.GetX();
+    MatrixXd Hr = tools.CalculateJacobian(x);
+    VectorXd Hx = tools.CalculateHx(x);
+    EKF.UpdateRadar(measurement_pack.raw_measurements_, Hr, Hx, Rr);
   }
   else {
-    EKF.Update(measurement_pack.raw_measurements_, Hl, Rl);
+    EKF.UpdateLidar(measurement_pack.raw_measurements_, Hl, Rl);
   }
 }
 

@@ -35,7 +35,22 @@ void KalmanFilter::Predict() {
   P = F * P * F.transpose() + Q;
 }
 
-void KalmanFilter::Update(const VectorXd &z, const MatrixXd &H, const MatrixXd &R) {
+void KalmanFilter::UpdateRadar(const VectorXd &z, const MatrixXd &H, const VectorXd &Hx, const MatrixXd &R) {
+
+  MatrixXd Ht = H.transpose();
+
+  VectorXd y = z - Hx;
+  MatrixXd S = H * P * Ht + R;
+  MatrixXd K = P * Ht * S.inverse();
+
+  x = x + K * y;
+  long xs = x.size();
+  MatrixXd I = MatrixXd::Identity(xs, xs);
+
+  P = (I - K * H) * P;
+}
+
+void KalmanFilter::UpdateLidar(const VectorXd &z, const MatrixXd &H, const MatrixXd &R) {
   MatrixXd Ht = H.transpose();
 
   VectorXd y = z - H * x;

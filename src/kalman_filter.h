@@ -21,7 +21,8 @@ public:
   void SetDeltaT(double dt);
   void UpdateQ(double ax, double ay, double dt);
   void Predict();
-  void Update(const VectorXd &z, const MatrixXd &H, const MatrixXd &R);
+  void UpdateLidar(const VectorXd &z, const MatrixXd &H, const MatrixXd &R);
+  void UpdateRadar(const VectorXd &z, const MatrixXd &H, const VectorXd &Hx, const MatrixXd &R);
   void PrintDebug();
   VectorXd GetX();
 };

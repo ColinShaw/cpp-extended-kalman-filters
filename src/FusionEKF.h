@@ -25,7 +25,6 @@ private:
   MatrixXd Rl;
   MatrixXd Rr;
   MatrixXd Hl;
-  MatrixXd Hr;
   MatrixXd F;
   MatrixXd P;
   MatrixXd Q;

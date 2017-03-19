@@ -15,7 +15,7 @@ public:
   VectorXd CalculateRMSE(const vector<VectorXd> &estimations, 
                          const vector<VectorXd> &ground_truth);
   MatrixXd CalculateJacobian(const VectorXd &x);
-
+  VectorXd CalculateHx(const VectorXd &x);
 };
 
 #endif /* TOOLS_H_ */
