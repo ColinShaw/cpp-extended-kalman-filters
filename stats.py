@@ -2,17 +2,6 @@ import math
 import csv
 import numpy as np
 
-filename = 'data/sample-laser-radar-measurement-data-2.txt'
-
-pxs = []
-pys = []
-
-vxs = []
-vys = []
-
-rhos = []
-phis = []
-rhodots = []
 
 def compute(filename):
     with open(filename, 'rt') as csvfile:
@@ -76,6 +65,7 @@ def print_stats(filename):
 
 
 for f in ['data/sample-laser-radar-measurement-data-1.txt','data/sample-laser-radar-measurement-data-2.txt']:
+   pxs, pys, vxs, vys, rhos, phis, rhodots = [], [], [], [], [], [], []
    compute(f)
    print_stats(f)
 
