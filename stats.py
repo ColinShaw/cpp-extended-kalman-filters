@@ -4,17 +4,10 @@ import numpy as np
 
 filename = 'data/sample-laser-radar-measurement-data-2.txt'
 
-pxs = []
-pys = []
-
-vxs = []
-vys = []
-
-rhos = []
-phis = []
-rhodots = []
-
 def compute(filename):
+    
+    pxs, pys, vxs, vys, rhos, phis, rhodots = [], [], [], [], [], [], []
+    
     with open(filename, 'rt') as csvfile:
         reader = csv.reader(csvfile, delimiter='\t')
         for row in reader:
